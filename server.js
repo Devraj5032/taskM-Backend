@@ -3,7 +3,8 @@ const { connDB } = require("./db");
 const app = express();
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoutes");
-const cookieParser = require('cookie-parser')
+const userRoutes = require("./routes/userRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 
 dotenv.config();
 app.use(express.json());
@@ -11,7 +12,9 @@ app.use(express.json());
 const PORT = process.env.PORT;
 
 connDB();
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/tasks", taskRoutes);
 
 app.listen(PORT, () => {
   try {
