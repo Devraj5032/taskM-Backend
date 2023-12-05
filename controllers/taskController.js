@@ -15,3 +15,12 @@ exports.CreateTask = async (req, res) => {
 
   return res.status(201).json(newTask);
 };
+
+exports.getAllTasks = async (req,res) => {
+  const tasks = await Task.find();
+  res.status(200).json({
+    "status": "success",
+    "length": tasks.length,
+    tasks: tasks
+  })
+}
