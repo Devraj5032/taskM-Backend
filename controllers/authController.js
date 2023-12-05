@@ -88,3 +88,9 @@ exports.Login = async (req , res) => {
     existingUser
   })
 }
+
+
+exports.Protect = async (req,res , next) => {
+  console.log(req.headers);
+  next()
+}

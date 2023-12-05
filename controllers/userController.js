@@ -5,6 +5,7 @@ exports.AllUser = async (req,res) => {
 
     return res.status(200).json({
         "status": "success",
+        "length": allUsers.length,
         "users": allUsers
     })
 }
