@@ -1,6 +1,6 @@
 const { User } = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 
 exports.SignUp = async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -48,49 +48,46 @@ exports.SignUp = async (req, res, next) => {
   }
 };
 
-exports.Login = async (req , res) => {
-  const {email , password} = req.body;
-  console.log(req.headers);
+exports.Login = async (req, res) => {
+  const { email, password } = req.body;
 
-  if (!email , !password) {
+  if ((!email, !password)) {
     return res.status(400).json({
       status: "error",
-      message: "Enter email and password"
-    })
+      message: "Enter email and password",
+    });
   }
 
-  const existingUser = await User.findOne({email})
+  const existingUser = await User.findOne({ email });
 
   if (!existingUser) {
     return res.status(400).json({
       status: "error",
-      message: "No account found with this email"
-    })
+      message: "No account found with this email",
+    });
   }
 
-  const matchPass = await bcrypt.compare(password , existingUser.password)
+  const matchPass = await bcrypt.compare(password, existingUser.password);
 
   if (!matchPass) {
     return res.status(400).json({
       status: "error",
-      message: "Email or Password is wrong"
-    })
+      message: "Email or Password is wrong",
+    });
   }
-  const token = jwt.sign({ existingUser }, process.env.JWT_SECRET, {
+  existingUser.password = undefined;
+
+  const userId = existingUser._id;
+
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_TIME,
   });
-
-  existingUser.password = undefined;
 
   return res.status(200).json({
     status: "success",
     token,
-    existingUser
-  })
-}
+    existingUser,
+  });
+};
 
 
-exports.Protect = async (req,res , next) => {
-  console.log(req.headers);
-  next()
-}
