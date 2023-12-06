@@ -1,6 +1,6 @@
 const express = require("express");
 const { CreateTask, getAllTasks } = require("../controllers/taskController");
-const { Protect } = require("../controllers/authController");
+const { Protect } = require("../Middlewares/Protect");
 const router = express.Router();
 
 router.route("/createTask").post(CreateTask);
