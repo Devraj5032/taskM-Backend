@@ -37,7 +37,7 @@ exports.SignUp = async (req, res, next) => {
     return res.status(201).json({
       success: "true",
       token,
-      newUser,
+      user: newUser,
     });
   } catch (error) {
     console.error("Error during user creation:", error);
@@ -51,7 +51,7 @@ exports.SignUp = async (req, res, next) => {
 exports.Login = async (req, res) => {
   const { email, password } = req.body;
 
-  if ((!email, !password)) {
+  if (!email && !password) {
     return res.status(400).json({
       status: "error",
       message: "Enter email and password",
@@ -86,7 +86,7 @@ exports.Login = async (req, res) => {
   return res.status(200).json({
     status: "success",
     token,
-    existingUser,
+    user: existingUser,
   });
 };
 
