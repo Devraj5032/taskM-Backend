@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 exports.Protect = async (req, res, next) => {
   try {
-    console.log("saefgb");
     let authToken;
 
     if (
@@ -25,7 +24,7 @@ exports.Protect = async (req, res, next) => {
       });
     }
 
-    const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
+    const decodedToken = await jwt.verify(authToken, process.env.JWT_SECRET);
 
     if (decodedToken.exp < Date.now() / 1000) {
       return res.status(401).json({
@@ -33,12 +32,7 @@ exports.Protect = async (req, res, next) => {
         description: "Unauthorized: Token has expired",
       });
     }
-
-    // Log decoded token for debugging
-    console.log("Decoded Token:", decodedToken);
-
     req.user = decodedToken;
-    console.log(decodedToken);
 
     next();
   } catch (error) {

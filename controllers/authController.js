@@ -1,6 +1,7 @@
 const { User } = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { catchAsync } = require("./errorController");
 
 exports.SignUp = async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -30,7 +31,7 @@ exports.SignUp = async (req, res, next) => {
 
     newUser.password = undefined;
 
-    const token = jwt.sign({ newUser }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ "id":newUser._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_TIME,
     });
 
@@ -48,7 +49,7 @@ exports.SignUp = async (req, res, next) => {
   }
 };
 
-exports.Login = async (req, res) => {
+exports.Login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email && !password) {
@@ -77,9 +78,7 @@ exports.Login = async (req, res) => {
   }
   existingUser.password = undefined;
 
-  const userId = existingUser._id;
-
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ "id": existingUser._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_TIME,
   });
 
@@ -88,6 +87,4 @@ exports.Login = async (req, res) => {
     token,
     user: existingUser,
   });
-};
-
-
+})
