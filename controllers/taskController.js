@@ -17,6 +17,15 @@ exports.CreateTask = async (req, res) => {
 };
 
 exports.getAllTasks = async (req,res) => {
+  const user = req.user
+
+  if (!user) {
+    return res.status(400).json({
+      "status": "failed",
+      "message": "login to access this route"
+    })
+  }
+
   const tasks = await Task.find();
   res.status(200).json({
     "status": "success",
