@@ -2,6 +2,8 @@ const { User } = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { catchAsync } = require("./errorController");
+const AppError = require('./../utils/AppError');
+const { mailSender } = require("../utils/MainSender");
 
 exports.SignUp = async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -31,7 +33,7 @@ exports.SignUp = async (req, res, next) => {
 
     newUser.password = undefined;
 
-    const token = jwt.sign({ "id":newUser._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ "id": newUser._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_TIME,
     });
 
@@ -88,3 +90,18 @@ exports.Login = catchAsync(async (req, res) => {
     user: existingUser,
   });
 })
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const existingUser = await User.findOne({ email: req.body.email }).select("-password")
+
+  if (!existingUser) {
+    return next(new AppError('There is no user with this email', 404))
+  }
+
+  // const sendingStatus = await mailSender(req.body.email, "Hello")
+  // console.log(sendingStatus);
+
+  return res.status(200).json(existingUser)
+})
+
+exports.resetPassword = catchAsync(async (req, res, next) => { })
