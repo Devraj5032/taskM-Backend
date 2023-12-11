@@ -18,6 +18,10 @@ const taskModel = mongoose.Schema({
   deadline: {
     type: Date,
     required: true
+  },
+  dateCreated : {
+    type: Date,
+    default: Date.now(),
   }
 });
 

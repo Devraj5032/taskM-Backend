@@ -1,5 +1,5 @@
 const { Task } = require("../models/taskSchema");
-const {catchAsync} = require('./errorController')
+const { catchAsync } = require('./errorController')
 
 exports.CreateTask = catchAsync(async (req, res) => {
   const { title, description, members, deadline } = req.body;
@@ -17,7 +17,7 @@ exports.CreateTask = catchAsync(async (req, res) => {
   return res.status(201).json(newTask);
 })
 
-exports.getAllTasks = catchAsync(async (req,res) => {
+exports.getAllTasks = catchAsync(async (req, res) => {
   const user = req.user
 
   if (!user) {
@@ -27,8 +27,32 @@ exports.getAllTasks = catchAsync(async (req,res) => {
     })
   }
 
+  // Sorting
 
-  const tasks = await Task.find().sort({ deadline: -1 });;
+  // Sort by deadline
+  const { deadline } = req.query
+  if (deadline) {
+    const tasks = await Task.find().sort({ deadline: deadline == 1 ? 1 : -1 });
+    res.status(200).json({
+      "status": "success",
+      "length": tasks.length,
+      tasks: tasks
+    })
+  }
+
+  // Sort by date created
+  const { dateCreated } = req.query
+  if (deadline) {
+    const tasks = await Task.find().sort({ dateCreated: dateCreated == 1 ? 1 : -1 });
+    res.status(200).json({
+      "status": "success",
+      "length": tasks.length,
+      tasks: tasks
+    })
+  }
+
+
+  const tasks = await Task.find();
   res.status(200).json({
     "status": "success",
     "length": tasks.length,
