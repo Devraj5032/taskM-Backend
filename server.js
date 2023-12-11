@@ -7,11 +7,17 @@ const userRoutes = require("./routes/userRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const AppError = require("./utils/AppError");
 const { globalErrorHandler } = require("./controllers/errorController");
+const http = require("http").createServer(app); 
+const io = require("socket.io")(http);
 
 dotenv.config();
 app.use(express.json());
 
 const PORT = process.env.PORT;
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
 
 connDB();
 app.use("/api/auth", authRoutes);
