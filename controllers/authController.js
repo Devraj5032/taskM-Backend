@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { catchAsync } = require("./errorController");
 const AppError = require('./../utils/AppError');
-const { mailSender } = require("../utils/MainSender");
+// const { mailSender } = require("../utils/MainSender");
 
 exports.SignUp = async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
